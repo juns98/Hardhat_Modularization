@@ -1,26 +1,30 @@
 import hre, { ethers } from "hardhat";
 import { contractInfos } from "./contractInfo";
+import { deployContract, deployUpgradeableContract } from "./deployContract";
+import { Contract } from "ethers";
+import { otherOptions } from "../hardhat.config";
 
-//-----------------------------------------------------------------------------------------------//
-//====================================== Change this part ========================================//
 const network: string = hre.network.name;
-
-//-----------------------------------------------------------------------------------------------//
-//-----------------------------------------------------------------------------------------------//
 
 const deploy = async () => {
   const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+  console.log(`Deploying contracts in ${network} with the account: ${deployer.address}`);
 
-  const ContractAddresses: Record<string, string> = {};
+  const ContractAddresses: Record<string, any> = {};
+
   // Iterate through contract Infos
+  let contract: Contract;
   for (const contractInfo of contractInfos) {
-    const ContractFactory = await ethers.getContractFactory(contractInfo.name);
-    const contract = await ContractFactory.deploy(...contractInfo.args);
-    await contract.deployed();
+    if (otherOptions.upgradeable) {
+      contract = await deployUpgradeableContract(contractInfo.name, ...contractInfo.args);
+    } else {
+      contract = await deployContract(contractInfo.name, ...contractInfo.args);
+    }
     console.log(`${contractInfo.name} deployed to:`, contract.address);
     ContractAddresses[contractInfo.name] = contract.address;
   }
+
+  return ContractAddresses;
 };
 
 (async () => {

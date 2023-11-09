@@ -1,25 +1,16 @@
-import { BigNumber, Contract } from "ethers";
+import { Contract } from "ethers";
 import { ethers } from "hardhat";
 import hre from "hardhat";
-import { getTestAddress } from "../utils/getTestAddress";
-import { provideLiquidity } from "../utils/utils";
-import { deployAll } from "../../scripts/deploy/deployAll";
 import { initializeContracts } from "./utils/initializeContracts";
 
-const network: string = hre.network.name; // BIFROST, KLAYTN, EVMOS
+const network: string = hre.network.name; // Network Name
 console.log("current Network: ", network);
 
-const contractLists = ["ContractA", "ContractB"];
-describe("ILPToken functions test", function () {
+const contractLists = ["Lock", "Lock2"]; // Test Contracts
+describe("Function Test Template", function () {
   let contracts: Record<string, Contract>;
 
-  let nonceDeployer: number;
-  let nonceLP: number;
-  let nonceUserA: number;
-  let nonceUserB: number;
-  let nonceUserC: number;
-  let tx: any;
-
+  //* Init Contracts *//
   before(async function () {
     const contracts = await initializeContracts(network, contractLists);
     for (const contractName of contractLists) {
@@ -27,6 +18,7 @@ describe("ILPToken functions test", function () {
     }
   });
 
+  //* Test Function *//
   it("Test transfer, transferFrom function", async () => {
     const [deployer, user] = await ethers.getSigners();
 
@@ -35,7 +27,7 @@ describe("ILPToken functions test", function () {
     //* when
 
     //* then
-
-    // expect(lpILPBalanceAfter).to.equal(BigNumber.from(lpILPBalance).sub(transferAmount.mul(2)).toString());
+    // sample code for mocha
+    // expect(balance).to.equal(balance1.sub(balance2));
   });
 });

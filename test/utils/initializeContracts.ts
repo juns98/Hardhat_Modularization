@@ -1,32 +1,36 @@
 import { Contract } from "ethers";
-import { deployAll } from "../../scripts/deploy/deployAll";
-import { NETWORK_NAMES, contractToDeployedPropertyMap } from "../constants";
 import { ethers } from "hardhat";
-import { getTestAddress } from "./getTestAddress";
+import { deployAll } from "../../scripts/deployAll";
+import { testnetAddresses, testnetList } from "../../constants/testnetAddresses";
 
-export const initializeContracts = async (network: string, names: string[]): Promise<Record<string, Contract>> => {
+// Define the valid network names
+type NetworkName = keyof typeof testnetAddresses;
+
+export const initializeContracts = async (network: NetworkName, names: string[]): Promise<Record<string, Contract>> => {
   const contracts: Record<string, Contract> = {};
-  const testAddresses: any = getTestAddress(network);
 
-  if (network === NETWORK_NAMES.HARDHAT) {
+  if (network === "hardhat") {
     const deployedContracts: Record<string, Contract> = (await deployAll()) as Record<string, Contract>; // Type cast here
 
     for (const name of names) {
-      const property = contractToDeployedPropertyMap[name];
-      if (property && deployedContracts[property]) {
-        contracts[name] = deployedContracts[property];
+      if (deployedContracts[name]) {
+        contracts[name] = deployedContracts[name];
       } else {
         console.error(`Unexpected contract name or missing mapping: ${name}`);
       }
     }
   } else {
-    for (const name of names) {
-      const property = contractToDeployedPropertyMap[name];
-      if (property && testAddresses[property]) {
-        contracts[name] = (await ethers.getContractAt(name, testAddresses[property])) as Contract;
-      } else {
-        console.error(`Unexpected contract name or missing mapping: ${name}`);
+    if (testnetList.includes(network)) {
+      const testAddresses = testnetAddresses[network];
+      for (const name of names) {
+        if (testAddresses && testAddresses[name]) {
+          contracts[name] = await ethers.getContractAt(name, testAddresses[name]);
+        } else {
+          console.error(`Unexpected contract name or missing mapping: ${name}`);
+        }
       }
+    } else {
+      console.error(`Unexpected network name or missing mapping: ${network}`);
     }
   }
 

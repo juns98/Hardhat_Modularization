@@ -16,6 +16,8 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {},
+
+    //* NETWORKS *//
     goerli: {
       url: process.env.GOERLI_URL,
       accounts: [PRIVATE_KEY],

@@ -6,7 +6,7 @@ import { otherOptions } from "../hardhat.config";
 
 const network: string = hre.network.name;
 
-const deploy = async () => {
+export const deployAll = async () => {
   const [deployer] = await ethers.getSigners();
   console.log(`Deploying contracts in ${network} with the account: ${deployer.address}`);
 
@@ -29,7 +29,7 @@ const deploy = async () => {
 
 (async () => {
   console.log("deploying start ...");
-  const ContractAddresses = await deploy();
+  const ContractAddresses = await deployAll();
   console.log("ContractAddresses: ", ContractAddresses);
   console.log("deploying end ...");
 })();

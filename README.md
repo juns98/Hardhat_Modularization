@@ -29,5 +29,22 @@ require('@openzeppelin/hardhat-upgrades');
 // For TypeScript
 import '@openzeppelin/hardhat-upgrades';
 
+# install solidity-coverage
+npm install --save-dev solidity-coverage
+
+## Add to hardhat.config
+// For JavaScript
+require("solidity-coverage");
+
+// For TypeScript
+import "solidity-coverage";
+
+# install soliumrc
+npm install -g solium
+
+# usage
+solium --init
+solium --dir . // For all files
+solium --file myContract.sol // For a single file
 
 ```

@@ -1,38 +1,27 @@
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
-import { deployAll } from "../../scripts/deployAll";
-import { testnetAddresses, testnetList } from "../../constants/testnetAddresses";
+import { deployAll } from "../../scripts/deploy";
+import { testnetAddresses } from "../../constants/testnetAddresses";
 
-// Define the valid network names
-type NetworkName = keyof typeof testnetAddresses;
-
-export const initializeContracts = async (network: NetworkName, names: string[]): Promise<Record<string, Contract>> => {
-  const contracts: Record<string, Contract> = {};
-
+export const initializeContracts = async (network: string, names: string[]): Promise<any> => {
+  // 1. Test on top of hardhat network
   if (network === "hardhat") {
-    const deployedContracts: Record<string, Contract> = (await deployAll()) as Record<string, Contract>; // Type cast here
-
-    for (const name of names) {
-      if (deployedContracts[name]) {
-        contracts[name] = deployedContracts[name];
-      } else {
-        console.error(`Unexpected contract name or missing mapping: ${name}`);
-      }
-    }
-  } else {
-    if (testnetList.includes(network)) {
-      const testAddresses = testnetAddresses[network];
-      for (const name of names) {
-        if (testAddresses && testAddresses[name]) {
-          contracts[name] = await ethers.getContractAt(name, testAddresses[name]);
-        } else {
-          console.error(`Unexpected contract name or missing mapping: ${name}`);
-        }
-      }
-    } else {
-      console.error(`Unexpected network name or missing mapping: ${network}`);
-    }
+    const deployedContracts = await deployAll(); // Type cast here
+    return deployedContracts;
   }
-
-  return contracts;
+  // 2. Test with actual deployed contracts
+  else {
+    const contracts: any = {};
+    // get test addresses
+    let testAddresses: any = {};
+    if (network === "networkA") {
+      testAddresses = testnetAddresses.networkA;
+    } else if (network === "networkB") {
+      testAddresses = testnetAddresses.networkB;
+    }
+    for (const name of names) {
+      contracts[name] = await ethers.getContractAt(name, testAddresses[name]);
+    }
+    return contracts;
+  }
 };

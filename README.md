@@ -18,33 +18,49 @@ npx hardhat run scripts/deploy.ts
 npm install --save-dev hardhat
 npx hardhat init
 
-# install Upgrades
-npm install --save-dev @openzeppelin/hardhat-upgrades
-npm install @openzeppelin/contracts-upgradeable
+# Core Hardhat and Ethers.js packages
+npm install --save-dev hardhat@2.0.2 ethers@5.7.2
 
-## Add to hardhat.config
-// For JavaScript
+# OpenZeppelin Contracts and Upgrades
+npm install --save-dev @openzeppelin/contracts@4.8.2 @openzeppelin/contracts-upgradeable@4.8.2 @openzeppelin/hardhat-upgrades@1.22.1 @openzeppelin/test-helpers@0.5.16
+
+# Hardhat add-ons and utilities
+npm install --save-dev @nomicfoundation/hardhat-network-helpers@1.0.8 @nomicfoundation/hardhat-toolbox@2.0.2
+
+# Solidity coverage for testing
+npm install --save-dev solidity-coverage@0.8.5
+
+# Additional tools and libraries
+npm install --save-dev dotenv@16.0.3 chai@4.3.7 web3@1.8.2 yargs@17.7.2
+
+```
+
+## Configuring HArdhat
+
+```shell
+// JavaScript
 require('@openzeppelin/hardhat-upgrades');
-
-// For TypeScript
-import '@openzeppelin/hardhat-upgrades';
-
-# install solidity-coverage
-npm install --save-dev solidity-coverage
-
-## Add to hardhat.config
-// For JavaScript
 require("solidity-coverage");
 
-// For TypeScript
+// TypeScript
+import '@openzeppelin/hardhat-upgrades';
 import "solidity-coverage";
 
-# install soliumrc
+```
+
+## Additional Tools
+
+Install and configure Solium for Solidity linting:
+
+```shell
 npm install -g solium
 
-# usage
+# Initialize configuration
 solium --init
-solium --dir . // For all files
-solium --file myContract.sol // For a single file
 
+# Lint all files
+solium --dir .
+
+# Lint a specific file
+solium --file myContract.sol
 ```

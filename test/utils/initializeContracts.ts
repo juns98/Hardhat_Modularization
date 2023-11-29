@@ -1,4 +1,3 @@
-import { Contract } from "ethers";
 import { ethers } from "hardhat";
 import { deployAll } from "../../scripts/deploy";
 import { testnetAddresses } from "../../constants/testnetAddresses";
@@ -18,6 +17,8 @@ export const initializeContracts = async (network: string, names: string[]): Pro
       testAddresses = testnetAddresses.networkA;
     } else if (network === "networkB") {
       testAddresses = testnetAddresses.networkB;
+    } else {
+      throw new Error("Invalid network name");
     }
     for (const name of names) {
       contracts[name] = await ethers.getContractAt(name, testAddresses[name]);

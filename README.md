@@ -35,7 +35,7 @@ npm install --save-dev dotenv@16.0.3 chai@4.3.7 web3@1.8.2 yargs@17.7.2
 
 ```
 
-## Configuring HArdhat
+## Configuring Hardhat
 
 ```shell
 // JavaScript
@@ -63,4 +63,11 @@ solium --dir .
 
 # Lint a specific file
 solium --file myContract.sol
+```
+
+## Conducting Tests
+
+```shell
+npx hardhat test
+npx hardhat coverage --testfiles "test/MyContract.test.ts"
 ```
